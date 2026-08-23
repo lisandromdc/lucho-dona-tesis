@@ -7,8 +7,8 @@ const CATEGORIES = {
   EN: { num: '01', name: 'ENTORNO', tag: '[EN]', type: 'pasiva', color: '#7ca23c' },
   T:  { num: '02', name: 'TIPOLOGÍAS', tag: '[T]', type: 'pasiva', color: '#c3b143' },
   EV: { num: '03', name: 'ENVOLVENTES', tag: '[EV]', type: 'pasiva', color: '#55b8e4' },
-  P:  { num: '04', name: 'SISTEMAS DE CONTROL Y PROTECCIÓN', tag: '[P]', type: 'pasiva', color: '#e56f2c' },
-  SC: { num: '05', name: 'SISTEMAS COMPLEMENTARIOS', tag: '[SC]', type: 'pasiva', color: '#b28c9e' },
+  P:  { num: '04', name: 'SISTEMAS DE CONTROL Y PROTECCIÓN', tag: '[P]', type: 'activa', color: '#e56f2c' },
+  SC: { num: '05', name: 'SISTEMAS COMPLEMENTARIOS', tag: '[SC]', type: 'activa', color: '#b28c9e' },
   AE: { num: '06', name: 'ARTEFACTOS EFICIENTES', tag: '[AE]', type: 'activa', color: '#5fbd8b' },
   ER: { num: '07', name: 'ENERGÍAS RENOVABLES', tag: '[ER]', type: 'activa', color: '#ef615e' },
   RH: { num: '08', name: 'GESTIÓN DEL RECURSO HÍDRICO', tag: '[RH]', type: 'activa', color: '#2d4a63' },
@@ -93,7 +93,7 @@ const STRATEGIES = [
   { code: 'EV08', cat: 'EV', group: 'Muro', title: 'Steel Framing',
     capas: ['Placa de yeso', 'Montante PGC 100', 'Lana de vidrio 100mm', 'Placa OSB', 'Barrera de agua y viento', 'Placa EPS 20mm', 'Base coat y finish'],
     esp: '15cm', k: '0,3', iram: 'Tipo A',
-    tip: 'Una pared de Steel Framing aisla 9 veces más que una de ladrillo común de similar espesor.<sup>8</sup>' },
+    tip: 'Una pared de Steel Framing aisla 9 veces más que una de ladrillo común de similar espesor.' },
   { code: 'EV09', cat: 'EV', group: 'Cubierta', title: 'Losa de hormigón armado (S/Aislación)',
     capas: ['Losa de hormigón armado 0,10 m', 'Film de polietileno', 'Contrapiso', 'Carpeta niveladora impermeable', 'Membrana hidrófuga'],
     esp: '20cm', k: '2,69', iram: 'No cumple' },
@@ -129,14 +129,14 @@ const STRATEGIES = [
   { code: 'EV21', cat: 'EV', group: 'Aventanamientos - vidriado', title: 'DOBLE VIDRIADO HERMÉTICO (DVH) LOW-E 4+12+4',
     text: 'Incorporar vidrios con tratamiento de baja emisividad (Low-E) para máxima protección frente a la radiación reflejando el calor y mejorando la aislación.',
     kdato: 'K=1,7 (W/m²K)',
-    tip: 'La relación área ventana/muro óptima es de <b>40% de superficie vidriada hacia la orientación norte</b><sup>9</sup>, mientras que para el resto de las orientaciones es recomendable <b>no superar el 10%</b>.' },
+    tip: 'La relación área ventana/muro óptima es de <b>40% de superficie vidriada hacia la orientación norte</b>, mientras que para el resto de las orientaciones es recomendable <b>no superar el 10%</b>.' },
   { code: 'EV22', cat: 'EV', group: 'Aventanamientos - marco', title: 'ALUMINIO SIN RPT',
     text: 'Evitar su uso en espacios habitables por ser un metal altamente conductor y carecer de barreras térmicas, transmitiendo directamente el frío exterior y puede producir condensación.' },
   { code: 'EV23', cat: 'EV', group: 'Aventanamientos - marco', title: 'ALUMINIO RPT',
     text: 'Incorporar RPT en espacios comunes o de presupuesto intermedio, para cortar la transmisión de temperatura, eliminando la condensación superficial y mejorando el confort higrotérmico.' },
   { code: 'EV24', cat: 'EV', group: 'Aventanamientos - marco', title: 'PVC',
     text: 'Incorporar marco de PVC, para el máximo rendimiento térmico y acústico. Priorizar su uso en dormitorios y orientaciones desfavorables.',
-    tip: 'La utilización de DVH y persianas exteriores de PVC pueden <b>mejorar un 600%</b><sup>10</sup> el rendimiento de una ventana con vidriado simple.' },
+    tip: 'La utilización de DVH y persianas exteriores de PVC pueden <b>mejorar un 600%</b> el rendimiento de una ventana con vidriado simple.' },
 
   // ============ 04 | SISTEMAS DE CONTROL Y PROTECCIÓN [P] ============
   { code: 'P01', cat: 'P', group: 'Horizontal', title: 'ALERO',
@@ -245,7 +245,7 @@ const STRATEGIES = [
     text: 'Reutilizar aguas negras (inodoro), posterior a un tratamiento complejo, para uso de riego.' },
   { code: 'RH03', cat: 'RH', group: '', title: 'APROVECHAMIENTO DE AGUA DE LLUVIA',
     text: 'Almacenar agua de las cubiertas y utilizarla para lavar ropa, descargar inodoros, limpieza de pisos o regar.',
-    tip: 'Reutilizando agua de lluvia, en una cubierta de 100 m2 podemos captar <b>90.000 litros de agua</b> anuales, ésto equivale a 41 descargas de inodoro diarias durante todo un año.<sup>13</sup>' },
+    tip: 'Reutilizando agua de lluvia, en una cubierta de 100 m2 podemos captar <b>90.000 litros de agua</b> anuales, ésto equivale a 41 descargas de inodoro diarias durante todo un año.' },
 ];
 
 // Texto introductorio de la sección Vegetación (04 | P)
@@ -259,7 +259,7 @@ const VEGETACION_EXTRA = {
     ['Confort psicológico:', 'Estimula el bienestar psicofísico de los usuarios a través de la integración biofílica con el paisaje.'],
   ],
   cierre: 'El uso prioritario de especies nativas actúa como un vector ecológico y cultural que preserva la biodiversidad local, restaura el paisaje original y demanda un menor mantenimiento hídrico en el territorio.',
-  tip: 'Algunas <b>especies recomendadas</b><sup>11</sup> para viviendas en nuestra ecorregión son el Ñangapirí, Palo Jabón, Tala, Sangre de Drago, Espinillo, Jacarandá, Lapacho Amarillo y Curupi.',
+  tip: 'Algunas <b>especies recomendadas</b> para viviendas en nuestra ecorregión son el Ñangapirí, Palo Jabón, Tala, Sangre de Drago, Espinillo, Jacarandá, Lapacho Amarillo y Curupi.',
 };
 
 // Intro de la sección 03 | Envolventes (consideraciones generales sobre color)
@@ -269,36 +269,11 @@ const ENVOLVENTES_COLOR = {
     items: ['Absorben una mayor proporción de la radiación solar.', 'Alcanzan temperaturas superficiales más elevadas.', 'Incrementan la transferencia de calor hacia el interior.', 'Pueden ser beneficiosos en climas fríos donde se busca aprovechar la ganancia solar.'] },
   claros: { label: 'Colores claros', sub: '(blanco, beige, gris claro)',
     items: ['Reflejan gran parte de la radiación solar.', 'Mantienen temperaturas superficiales más bajas.', 'Reducen las ganancias térmicas hacia el interior.', 'Son especialmente útiles en climas cálidos.'] },
-  p2: 'Estudios han demostrado que las cubiertas claras pueden presentar temperaturas superficiales entre 20 y 30°C inferiores que cubiertas oscuras expuestas a las mismas condiciones de radiación solar.<sup>7</sup>',
+  p2: 'Estudios han demostrado que las cubiertas claras pueden presentar temperaturas superficiales entre 20 y 30°C inferiores que cubiertas oscuras expuestas a las mismas condiciones de radiación solar.',
   p3: 'En la cubierta es donde el color tiene mayor impacto, porque reciben la mayor cantidad de radiación, aunque los muros también se ven altamente afectados. En ambos casos, para nuestra región es siempre recomendable utilizar colores claros.',
 };
 
 // Intro de la sección 08 | RH
 const RH_INTRO = 'Según la subsecretaría de Ambiente y Desarrollo Sustentable de la nación, en Argentina, el consumo doméstico de agua es en promedio de 318 litros por habitante por día. Esto significa un 83% más que la media latinoamericana y 6,3 veces más que los estándares fijados por la OMS.\n\nLas siguientes estrategias contribuyen a disminuir considerablemente el consumo';
 
-// Notas al pie del manual
-const FOOTNOTES = {
-  1: 'Bardou y Arzoumanian (1981)',
-  2: 'Czajkowski y Gómez (2009)',
-  4: 'IRAM 11601:2002',
-  5: 'Puig (2023)',
-  6: 'Resolución N°5/2023 de la Secretaría de Energía del Ministerio de Economía.',
-  7: 'Frei. (2023)',
-  8: 'Considerando los valores de transmitancia térmica (K) mencionados anteriormente.',
-  9: 'Dacunda (2024).',
-  10: 'Considerando un vidrio simple de K= 5,8 W/m2k y un paquete de Ventana, DVH y persiana de 15 mm con poliuretano de alta densidad, K= 0,97 W/m2K',
-  11: 'Colaboración personal del ingeniero agrónomo Ruben Broda.',
-  12: 'Gonzalez Calderon (2019)',
-  13: 'Considerando un régimen pluviométrico aproximado de 1000 mm anuales, precipitación media anual de los últimos diez años (2016-2025). Datos meteorológicos del CIM FICH UNL. Recuperado de http://wfich1.unl.edu.ar/cim/datos-meteorologicos el 12 de enero de 2026',
-};
 
-const BIBLIOGRAFIA = [
-  'Bardou, P. y Arzoumanian V. (1981). <i>Sol y Arquitectura.</i> Gustavo Gili.',
-  'Czajkowski J.D. y Gómez, A. F. (2009). <i>Arquitectura sustentable.</i> Colección: Herramientas para Arquitectos. AGEA.',
-  'Instituto Argentino de Normalización y Certificación (IRAM) (2002). <i>Acondicionamiento térmico de edificios. Propiedades térmicas de los componentes y elementos de construcción en régimen estacionario.</i> (IRAM 11601:2002).. IRAM.',
-  'Puig, S. E. (2023) Estrategias de intervención tecnológica. <i>Evaluación del desempeño energético en viviendas sociales de la Provincia de Santa Fe.</i> [Tesis de Maestría, Universidad Nacional del Litoral, Facultad de Arquitectura, Diseño y Urbanismo]. Biblioteca Virtual UNL. https://hdl.handle.net/11185/7642',
-  'Frei, A. (2023). Thermal properties of green, white, and other roofing materials, and solar insolation: A case study in New York City. <i>Building and Environment, 244</i>, 110842. https://doi.org/10.1016/j.buildenv.2023.110842',
-  'Dacunda, M. (2024). <i>Evaluación de la eficiencia energética de edificios residenciales : recomendaciones y propuestas de mejoras.</i> [Proyecto Final de Carrera, Universidad Tecnológica Nacional, Facultad Regional Santa Fe]. Repositorio Institucional Abierto (RIA-UTN). https://hdl.handle.net/20.500.12272/11854',
-  'Barreneche, R. O. (2017). I<i>nstalaciones Sanitarias Sostenibles.</i> Diseño Editorial.',
-  'González Calderón, J. (2019). <i>Manual de vivienda sustentable.</i> Ministerio de Interior, Obras Públicas y Vivienda. Secretaría de ambiente y desarrollo sustentable. Secretaría de Energía. Presidencia de la Nación Argentina.',
-];

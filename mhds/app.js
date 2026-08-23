@@ -1,51 +1,35 @@
-// MHDS — lógica de navegación, filtros, búsqueda y fichas
+// MHDS — render de estrategias (pasivas/activas), búsqueda y fichas
 (function () {
   'use strict';
 
-  const state = { type: 'todas', cat: null, query: '' };
+  const state = { query: '' };
 
   const $ = (sel, el) => (el || document).querySelector(sel);
   const $$ = (sel, el) => Array.from((el || document).querySelectorAll(sel));
 
-  const catFiltersEl = $('#catFilters');
-  const sectionsEl = $('#strategy-sections');
-  const countEl = $('#results-count');
+  const rootEl = $('#strategy-root');
+  const noteEl = $('#results-note');
   const searchEl = $('#searchbox');
 
-  // ---------- Filtros por categoría ----------
-  Object.entries(CATEGORIES).forEach(([key, cat]) => {
-    const btn = document.createElement('button');
-    btn.className = 'chip chip-cat';
-    btn.dataset.cat = key;
-    btn.style.setProperty('--c', cat.color);
-    btn.innerHTML = `<span class="dot"></span>${cat.num} | ${cat.name} ${cat.tag}`;
-    btn.addEventListener('click', () => {
-      state.cat = state.cat === key ? null : key;
-      $$('.chip-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === state.cat));
-      render();
-    });
-    catFiltersEl.appendChild(btn);
-  });
+  const TYPES = [
+    { key: 'pasiva', id: 'pasivas', title: 'PASIVAS' },
+    { key: 'activa', id: 'activas', title: 'ACTIVAS' },
+  ];
 
-  $$('.chip-type').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.type = btn.dataset.type;
-      $$('.chip-type').forEach(b => b.classList.toggle('active', b === btn));
-      render();
-    });
-  });
+  const imgFor = s => `assets/strategies/${s.code}.jpg`;
+  const iconFor = cat => `assets/icons/cat-${Number(cat.num)}.png`;
 
+  // ---------- Búsqueda ----------
   let searchTimer;
   searchEl.addEventListener('input', () => {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
       state.query = searchEl.value.trim().toLowerCase();
       render();
-      if (state.query) $('#estrategias').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (state.query) $('#strategy-root').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 180);
   });
 
-  // ---------- Búsqueda ----------
   function matches(s) {
     if (!state.query) return true;
     const hay = [
@@ -55,13 +39,6 @@
       (s.capas || []).join(' '), s.kdato || '', s.tip || '', (s.tips || []).join(' '),
     ].join(' ').toLowerCase();
     return state.query.split(/\s+/).every(w => hay.includes(w));
-  }
-
-  function visible(s) {
-    const cat = CATEGORIES[s.cat];
-    if (state.type !== 'todas' && cat.type !== state.type) return false;
-    if (state.cat && s.cat !== state.cat) return false;
-    return matches(s);
   }
 
   function esc(str) {
@@ -79,27 +56,30 @@
     return out;
   }
 
-  // ---------- Render de tarjetas ----------
+  // ---------- Tarjetas ----------
   function cardHTML(s) {
     const cat = CATEGORIES[s.cat];
-    let excerpt = s.text || (s.ventajas ? 'Ventajas y desventajas de esta configuración tipológica.' : '');
+    let excerpt = s.text || '';
     if (s.capas) excerpt = s.capas.join(' · ');
-    if (excerpt.length > 150) excerpt = excerpt.slice(0, 150).replace(/\s\S*$/, '') + '…';
+    if (!excerpt && s.ventajas) excerpt = 'Ventajas y desventajas de esta configuración.';
+    if (excerpt.length > 130) excerpt = excerpt.slice(0, 130).replace(/\s\S*$/, '') + '…';
 
     const badges = [];
     if (s.iram) {
       const cls = s.iram === 'No cumple' ? 'iram-no' : s.iram === 'Tipo A' ? 'iram-a' : s.iram === 'Tipo B' ? 'iram-b' : 'iram-c';
       badges.push(`<span class="iram-badge ${cls}">${esc(s.iram)}</span>`);
     }
-    const kline = s.esp ? `<div class="k-badge">${esc(s.esp)} · K ${esc(s.k)} W/m²K</div>` : (s.kdato ? `<div class="k-badge">${esc(s.kdato)}</div>` : '');
+    if (s.esp) badges.push(`<span class="data-badge">${esc(s.esp)}</span><span class="data-badge">K ${esc(s.k)}</span>`);
+    if (s.kdato) badges.push(`<span class="data-badge">${esc(s.kdato)}</span>`);
 
     return `<button class="card" style="--c:${cat.color}" data-code="${s.code}">
-      <span class="code">${hl(s.code)}</span>
-      <h4>${hl(s.title)}</h4>
-      ${kline}
-      ${badges.length ? `<div class="badges">${badges.join('')}</div>` : ''}
-      <span class="excerpt">${hl(excerpt)}</span>
-      <span class="more">Ver ficha completa →</span>
+      <div class="card-img"><img src="${imgFor(s)}" alt="${esc(s.code)} — ${esc(s.title)}" loading="lazy"></div>
+      <div class="card-body">
+        <span class="code">${hl(s.code)}</span>
+        <h4>${hl(s.title)}</h4>
+        ${badges.length ? `<div class="badges">${badges.join('')}</div>` : ''}
+        <span class="excerpt">${hl(excerpt)}</span>
+      </div>
     </button>`;
   }
 
@@ -108,10 +88,11 @@
     if (key === 'EV') {
       const c = ENVOLVENTES_COLOR;
       return `<div class="cat-intro">
-        <p><b>Consideraciones generales.</b> ${c.p1}</p>
+        <p class="group-title-inline">Consideraciones generales</p>
+        <p>${c.p1}</p>
         <div class="vd-grid">
-          <div class="vd-col" style="background:#3d4540;color:#fff"><h5 style="color:#fff">${c.oscuros.label} <small>${c.oscuros.sub}</small></h5><ul>${c.oscuros.items.map(i => `<li>${i}</li>`).join('')}</ul></div>
-          <div class="vd-col" style="background:#f2f1ec;border:1px solid var(--line)"><h5>${c.claros.label} <small>${c.claros.sub}</small></h5><ul>${c.claros.items.map(i => `<li>${i}</li>`).join('')}</ul></div>
+          <div class="vd-col color-oscuros"><h5>${c.oscuros.label} <small>${c.oscuros.sub}</small></h5><ul>${c.oscuros.items.map(i => `<li>${i}</li>`).join('')}</ul></div>
+          <div class="vd-col color-claros"><h5>${c.claros.label} <small>${c.claros.sub}</small></h5><ul>${c.claros.items.map(i => `<li>${i}</li>`).join('')}</ul></div>
         </div>
         <p>${c.p2}</p><p>${c.p3}</p>
       </div>`;
@@ -124,74 +105,100 @@
 
   function catOutroHTML(key) {
     if (state.query) return '';
+    if (key === 'EN') {
+      const en13 = STRATEGIES.find(s => s.code === 'EN13');
+      return tipbox(esc(en13.tip));
+    }
+    if (key === 'EV') {
+      return tipbox('Una pared de <b>Steel Framing aisla 9 veces más</b> que una de ladrillo común de similar espesor.') +
+        tipbox('La relación área ventana/muro óptima es de <b>40% de superficie vidriada hacia la orientación norte</b>, mientras que para el resto de las orientaciones es recomendable <b>no superar el 10%</b>.') +
+        tipbox('La utilización de DVH y persianas exteriores de PVC pueden <b>mejorar un 600%</b> el rendimiento de una ventana con vidriado simple.');
+    }
     if (key === 'P') {
       const v = VEGETACION_EXTRA;
       return `<div class="cat-intro">
         <p>${esc(v.intro)}</p>
-        <ul class="plain" style="padding-left:20px">${v.items.map(([b, t]) => `<li><b style="color:${CATEGORIES.P.color}">${esc(b)}</b> ${esc(t)}</li>`).join('')}</ul>
-        <p style="margin-top:10px">${esc(v.cierre)}</p>
-        <div class="tipbox"><span class="tip-icon">💡</span><p>${v.tip}</p></div>
-      </div>`;
+        <ul class="veg-list">${v.items.map(([b, t]) => `<li><b>${esc(b)}</b> ${esc(t)}</li>`).join('')}</ul>
+        <p>${esc(v.cierre)}</p>
+      </div>` + tipbox(v.tip);
     }
     if (key === 'ER') {
       const er03 = STRATEGIES.find(s => s.code === 'ER03');
-      return er03.tips.map(t => `<div class="tipbox"><span class="tip-icon">💡</span><p>${t}</p></div>`).join('');
+      return er03.tips.map(tipbox).join('');
     }
     if (key === 'RH') {
       const rh03 = STRATEGIES.find(s => s.code === 'RH03');
-      return `<div class="tipbox"><span class="tip-icon">💡</span><p>${rh03.tip}</p></div>
-        <p class="footnote"><sup>12</sup> ${esc(FOOTNOTES[12])}<br><sup>13</sup> ${esc(FOOTNOTES[13])}</p>`;
-    }
-    if (key === 'EN') {
-      const en13 = STRATEGIES.find(s => s.code === 'EN13');
-      return `<div class="tipbox"><span class="tip-icon">💡</span><p>${esc(en13.tip)}</p></div>`;
-    }
-    if (key === 'EV') {
-      return `<div class="tipbox"><span class="tip-icon">💡</span><p>Una pared de <b>Steel Framing aisla 9 veces más</b> que una de ladrillo común de similar espesor.<sup>8</sup></p></div>
-        <div class="tipbox"><span class="tip-icon">💡</span><p>La relación área ventana/muro óptima es de <b>40% de superficie vidriada hacia la orientación norte</b><sup>9</sup>, mientras que para el resto de las orientaciones es recomendable <b>no superar el 10%</b>.</p></div>
-        <div class="tipbox"><span class="tip-icon">💡</span><p>La utilización de DVH y persianas exteriores de PVC pueden <b>mejorar un 600%</b><sup>10</sup> el rendimiento de una ventana con vidriado simple.</p></div>
-        <p class="footnote"><sup>7</sup> ${esc(FOOTNOTES[7])}<br><sup>8</sup> ${esc(FOOTNOTES[8])}<br><sup>9</sup> ${esc(FOOTNOTES[9])}<br><sup>10</sup> ${esc(FOOTNOTES[10])}</p>`;
+      return tipbox(rh03.tip);
     }
     return '';
   }
 
+  const tipbox = html => `<div class="tipbox"><span class="tip-icon">💡</span><p>${html}</p></div>`;
+
+  // ---------- Render ----------
   function render() {
     const frag = [];
     let total = 0;
 
-    Object.entries(CATEGORIES).forEach(([key, cat]) => {
-      const items = STRATEGIES.filter(s => s.cat === key && visible(s));
-      if (!items.length) return;
-      total += items.length;
+    TYPES.forEach(t => {
+      const cats = Object.entries(CATEGORIES).filter(([, c]) => c.type === t.key);
+      const catBlocks = [];
 
-      // agrupar por subgrupo conservando el orden
-      const groups = [];
-      items.forEach(s => {
-        const g = s.group || '';
-        let bucket = groups.find(b => b.name === g);
-        if (!bucket) { bucket = { name: g, items: [] }; groups.push(bucket); }
-        bucket.items.push(s);
+      cats.forEach(([key, cat]) => {
+        const items = STRATEGIES.filter(s => s.cat === key && matches(s));
+        if (!items.length) return;
+        total += items.length;
+
+        const groups = [];
+        items.forEach(s => {
+          const g = s.group || '';
+          let bucket = groups.find(b => b.name === g);
+          if (!bucket) { bucket = { name: g, items: [] }; groups.push(bucket); }
+          bucket.items.push(s);
+        });
+
+        catBlocks.push(`<div class="cat-section" id="cat-${key}" style="--c:${cat.color}">
+          <div class="cat-header">
+            <div class="cat-icon"><img src="${iconFor(cat)}" alt="" loading="lazy"></div>
+            <div class="cat-header-text">
+              <span class="cat-num">${cat.num} | ${cat.name} <span class="cat-tag">${cat.tag}</span></span>
+            </div>
+          </div>
+          ${catIntroHTML(key)}
+          ${groups.map(g => `
+            ${g.name ? `<p class="group-title">${esc(g.name)}</p>` : ''}
+            <div class="cards">${g.items.map(cardHTML).join('')}</div>
+          `).join('')}
+          ${catOutroHTML(key)}
+        </div>`);
       });
 
-      frag.push(`<div class="cat-section" style="--c:${cat.color}">
-        <div class="cat-header" style="--c:${cat.color}">
-          <span class="cat-num">${cat.num}</span>
-          <h3>${cat.name} <small>${cat.tag}</small></h3>
-          <span class="cat-type">Estrategias ${cat.type === 'pasiva' ? 'pasivas' : 'activas'}</span>
+      if (!catBlocks.length) return;
+
+      frag.push(`<section class="type-section" id="${t.id}">
+        <div class="type-banner">
+          <p class="type-banner-pre">ESTRATEGIAS</p>
+          <h2>${t.title}</h2>
         </div>
-        ${catIntroHTML(key)}
-        ${groups.map(g => `
-          ${g.name ? `<p class="group-title">${esc(g.name)}</p>` : '<div style="height:12px"></div>'}
-          <div class="cards">${g.items.map(cardHTML).join('')}</div>
-        `).join('')}
-        ${catOutroHTML(key)}
-      </div>`);
+        <div class="section type-body">
+          ${state.query ? '' : `<div class="cat-nav">${cats.map(([key, c]) =>
+            `<a class="chip chip-cat" style="--c:${c.color}" href="#cat-${key}"><span class="dot"></span>${c.num} | ${c.name}</a>`).join('')}</div>`}
+          ${catBlocks.join('')}
+        </div>
+      </section>`);
     });
 
-    sectionsEl.innerHTML = frag.join('') || '<p style="color:var(--ink-soft);padding:30px 4px">No se encontraron estrategias con ese criterio.</p>';
-    countEl.textContent = `${total} estrategia${total === 1 ? '' : 's'}${state.query ? ` para “${searchEl.value.trim()}”` : ''}`;
+    rootEl.innerHTML = frag.join('') || '';
+    if (state.query) {
+      noteEl.hidden = false;
+      noteEl.textContent = total
+        ? `${total} estrategia${total === 1 ? '' : 's'} para “${searchEl.value.trim()}”`
+        : `No se encontraron estrategias para “${searchEl.value.trim()}”.`;
+    } else {
+      noteEl.hidden = true;
+    }
 
-    $$('.card', sectionsEl).forEach(el => el.addEventListener('click', () => openModal(el.dataset.code)));
+    $$('.card', rootEl).forEach(el => el.addEventListener('click', () => openModal(el.dataset.code)));
   }
 
   // ---------- Modal ----------
@@ -204,9 +211,15 @@
     const cat = CATEGORIES[s.cat];
     const parts = [];
 
-    parts.push(`<span class="code-lg">${esc(s.code)}</span>`);
-    parts.push(`<h3>${esc(s.title)}</h3>`);
-    parts.push(`<p class="modal-meta">${cat.num} | ${cat.name} ${cat.tag}${s.group ? ' · ' + esc(s.group) : ''} · Estrategia ${cat.type}</p>`);
+    parts.push(`<div class="modal-head">
+      <div>
+        <span class="code-lg">${esc(s.code)}</span>
+        <h3 id="modal-title">${esc(s.title)}</h3>
+        <p class="modal-meta">${cat.num} | ${cat.name} ${cat.tag}${s.group ? ' · ' + esc(s.group) : ''} · Estrategia ${cat.type}</p>
+      </div>
+    </div>`);
+
+    parts.push(`<div class="modal-fig"><img src="${imgFor(s)}" alt="${esc(s.code)} — ${esc(s.title)}"></div>`);
 
     if (s.text) parts.push(`<p class="modal-text">${esc(s.text)}</p>`);
 
@@ -251,8 +264,8 @@
       <p class="caption">${esc(t.caption).replace(/\n/g, '<br>')}</p>`);
     }
 
-    if (s.tip) parts.push(`<div class="tipbox"><span class="tip-icon">💡</span><p>${s.tip}</p></div>`);
-    if (s.tips) s.tips.forEach(t => parts.push(`<div class="tipbox"><span class="tip-icon">💡</span><p>${t}</p></div>`));
+    if (s.tip) parts.push(tipbox(s.tip));
+    if (s.tips) s.tips.forEach(t => parts.push(tipbox(t)));
 
     modalContent.innerHTML = parts.join('');
     modalContent.parentElement.style.setProperty('--mc', cat.color);
@@ -268,10 +281,6 @@
   $('#modal-close').addEventListener('click', closeModal);
   modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
-
-  // ---------- Bibliografía y notas ----------
-  $('#biblio-list').innerHTML = BIBLIOGRAFIA.map(b => `<li>${b}</li>`).join('');
-  $('#footnotes-list').innerHTML = Object.entries(FOOTNOTES).map(([n, t]) => `<li value="${n}">${esc(t)}</li>`).join('');
 
   render();
 })();
