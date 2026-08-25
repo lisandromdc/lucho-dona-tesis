@@ -14,9 +14,9 @@
 <header class="hero" id="inicio">
   <div class="hero-inner">
     <p class="hero-kicker">Tesis de graduación · FADU|UNL</p>
-    <h1>ESTRATEGIAS PROYECTUALES PARA LA EFICIENCIA ENERGÉTICA EN VIVIENDAS UNIFAMILIARES:</h1>
-    <p class="hero-sub">BASES PARA UN MANUAL ABIERTO DE BUENAS PRÁCTICAS.<br>CASO: SAN CARLOS CENTRO.</p>
-    <p class="hero-anexo">ANEXO I: <b>MANUAL DE HERRAMIENTAS SOSTENIBLES</b></p>
+    <p class="hero-thesis">ESTRATEGIAS PROYECTUALES PARA LA EFICIENCIA ENERGÉTICA EN VIVIENDAS UNIFAMILIARES:</p>
+    <p class="hero-thesis hero-thesis-sub">bases para un manual abierto de buenas prácticas. caso: san carlos centro.</p>
+    <h1>MANUAL DE HERRAMIENTAS SOSTENIBLES (MHDS)</h1>
     <p class="hero-authors">Dona Luciano&nbsp;|&nbsp;Ramira Camila</p>
     <div class="hero-actions">
       <a href="#introduccion" class="btn btn-light">Introducción</a>
@@ -31,8 +31,14 @@
   <a href="#inicio" class="nav-brand">MHDS</a>
   <div class="nav-links">
     <a href="#introduccion">Introducción</a>
-    <a href="#pasivas">Pasivas</a>
-    <a href="#activas">Activas</a>
+    <div class="nav-item">
+      <a href="#pasivas">Estrategias pasivas</a>
+      <div class="nav-menu" data-type="pasiva"></div>
+    </div>
+    <div class="nav-item">
+      <a href="#activas">Estrategias activas</a>
+      <div class="nav-menu" data-type="activa"></div>
+    </div>
   </div>
   <input type="search" id="searchbox" placeholder="Buscar estrategia (ej: ventilación, DVH, EN05…)" aria-label="Buscar estrategia">
 </nav>
@@ -44,7 +50,7 @@
   <h2 class="section-title">INTRODUCCIÓN</h2>
   <p class="section-hint">Tocá cada bloque para desplegarlo.</p>
 
-  <details class="intro-block" open>
+  <details class="intro-block">
     <summary><span class="intro-num">01</span> DEFINICIÓN · ¿POR QUÉ? · ¿PARA QUIÉN?</summary>
     <div class="intro-body">
       <h3>DEFINICIÓN</h3>
@@ -111,7 +117,7 @@
   <details class="intro-block">
     <summary><span class="intro-num">05</span> PRINCIPIO BÁSICO DE EFICIENCIA ENERGÉTICA · MECANISMOS DE TRANSFERENCIA DE CALOR</summary>
     <div class="intro-body">
-      <h3>PRINCIPIO BÁSICO DE EFICIENCIA ENERGÉTICA <span class="h3-sub">EN LA VIVIENDA</span></h3>
+      <h3>PRINCIPIO BÁSICO DE EFICIENCIA ENERGÉTICA EN LA VIVIENDA</h3>
       <div class="balde">
         <img src="assets/intro/balde-1.png" alt="Balde con agujeros perdiendo agua" loading="lazy">
         <p>La vivienda es como un balde de agua. Para que el balde cumpla su función, debe estar en buen estado: si presenta agujeros, el agua inevitablemente se pierde. Por más que abramos la canilla para rellenarlo, vamos a estar desperdiciando agua y nunca lograremos llenarlo si los agujeros son demasiado grandes. En esta comparación, la vivienda representa el balde, las pérdidas térmicas equivalen a los agujeros, y la energía aportada (por fuentes renovables o sistemas activos) es el agua que fluye desde la canilla.</p>
@@ -119,7 +125,7 @@
       </div>
       <p>En esta metáfora, lo que queremos decir es que no alcanza con incorporar energías renovables si la envolvente edilicia no está bien resuelta.</p>
       <p>Antes de “abrir la canilla”, es indispensable “tapar los agujeros”: mejorar la orientación, la ventilación, el aislamiento y los materiales, reduciendo al máximo la demanda energética. Solo una vez optimizada la eficiencia pasiva, resulta pertinente evaluar estrategias activas o sistemas complementarios.</p>
-      <h3>MECANISMOS DE TRANSFERENCIA DE CALOR <span class="h3-sub">EN LA VIVIENDA</span></h3>
+      <h3>MECANISMOS DE TRANSFERENCIA DE CALOR EN LA VIVIENDA</h3>
       <img class="intro-figure" src="assets/intro/transferencia.jpg" alt="Mecanismos de transferencia de calor en la vivienda: conducción a través de los materiales, convección a través de fluidos aire y agua, radiación a través de ondas elctromagnéticas" loading="lazy">
     </div>
   </details>
@@ -133,10 +139,10 @@
         <table class="k-table">
           <thead><tr><th>Nivel</th><th>CONDICIÓN INVIERNO<br>MURO</th><th>CONDICIÓN VERANO<br>CUBIERTA</th></tr></thead>
           <tbody>
-            <tr><td>A</td><td>0,33 W/m²K</td><td>0,18 W/m²K</td></tr>
-            <tr><td>B1</td><td>0,62 W/m²K</td><td>0,31 W/m²K</td></tr>
-            <tr><td>B</td><td>0,91 W/m²K</td><td>0,45 W/m²K</td></tr>
-            <tr><td>C</td><td>1,59 W/m²K</td><td>0,72 W/m²K</td></tr>
+            <tr class="lvl-a"><td>A</td><td>0,33 W/m²K</td><td>0,18 W/m²K</td></tr>
+            <tr class="lvl-b1"><td>B1</td><td>0,62 W/m²K</td><td>0,31 W/m²K</td></tr>
+            <tr class="lvl-b"><td>B</td><td>0,91 W/m²K</td><td>0,45 W/m²K</td></tr>
+            <tr class="lvl-c"><td>C</td><td>1,59 W/m²K</td><td>0,72 W/m²K</td></tr>
           </tbody>
         </table>
       </div>
@@ -166,14 +172,6 @@
   <p>ANEXO I: MANUAL DE HERRAMIENTAS SOSTENIBLES · Tesis de graduación FADU|UNL</p>
   <p>Dona Luciano | Ramira Camila</p>
 </footer>
-
-<!-- ============ MODAL ============ -->
-<div class="modal-backdrop" id="modal" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <button class="modal-close" id="modal-close" aria-label="Cerrar">✕</button>
-    <div id="modal-content"></div>
-  </div>
-</div>
 
 <script src="data.js"></script>
 <script src="app.js"></script>
