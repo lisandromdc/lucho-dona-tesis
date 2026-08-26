@@ -74,10 +74,33 @@
     });
   }
 
-  // ---------- Ficha de estrategia (formato del anexo: código, título, imagen, descripción) ----------
+  // ---------- Sponsors ----------
+  function initSponsors() {
+    const logo = s => {
+      const img = `<img src="${s.img}" alt="${esc(s.name)}" loading="lazy">`;
+      return s.url ? `<a href="${s.url}" target="_blank" rel="noopener" title="${esc(s.name)}">${img}</a>` : img;
+    };
+    $$('.sponsor-bar-logos, .sponsor-logos').forEach(el => {
+      el.innerHTML = SPONSORS.map(logo).join('');
+    });
+
+    const overlay = $('#sponsor-overlay');
+    if (!overlay || !SPONSORS.length) return;
+    const close = () => {
+      overlay.classList.add('closing');
+      setTimeout(() => { overlay.hidden = true; document.body.style.overflow = ''; }, 180);
+    };
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+    $('#sponsor-close').addEventListener('click', close);
+    $('#sponsor-continue').addEventListener('click', close);
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !overlay.hidden) close(); });
+  }
+
+  // ---------- Ficha de estrategia (formato del anexo: código · título | imagen | descripción) ----------
   function strategyHTML(s) {
     const cat = CATEGORIES[s.cat];
-    const wide = !!(s.ventajas || s.desventajas || s.tabla || s.ciclo || (s.tips && s.tips.length > 1));
 
     const badges = [];
     if (s.iram) {
@@ -120,7 +143,7 @@
     if (s.tip) extras.push(tipbox(s.tip));
     if (s.tips) s.tips.forEach(t => extras.push(tipbox(t)));
 
-    return `<article class="st-item${wide ? ' st-wide' : ''}" id="s-${s.code}" style="--c:${cat.color}">
+    return `<article class="st-item" id="s-${s.code}" style="--c:${cat.color}">
       <header class="st-head"><span class="st-code">${hl(s.code)}</span><h4 class="st-title">${hl(s.title)}</h4></header>
       <div class="st-media"><img src="${imgFor(s)}" alt="${esc(s.code)} — ${esc(s.title)}" loading="lazy"></div>
       <div class="st-body">
@@ -253,5 +276,6 @@
   });
 
   buildNavMenus();
+  initSponsors();
   render();
 })();

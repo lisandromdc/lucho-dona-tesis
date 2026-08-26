@@ -10,6 +10,12 @@
 </head>
 <body>
 
+<!-- ============ SPONSORS: barra superior ============ -->
+<div class="sponsor-bar">
+  <span class="sponsor-bar-label">Con el apoyo de</span>
+  <div class="sponsor-bar-logos"></div>
+</div>
+
 <!-- ============ PORTADA ============ -->
 <header class="hero" id="inicio">
   <div class="hero-inner">
@@ -170,8 +176,18 @@
 
 <footer class="footer">
   <p>ANEXO I: MANUAL DE HERRAMIENTAS SOSTENIBLES · Tesis de graduación FADU|UNL</p>
-  <p>Dona Luciano | Ramira Camila</p>
+  <p><a href="https://lucho-dona-arquitecto.vercel.app/" target="_blank" rel="noopener">Dona Luciano</a> | <a href="https://www.instagram.com/crramira.arq/" target="_blank" rel="noopener">Ramira Camila</a></p>
 </footer>
+
+<!-- ============ SPONSORS: ventana de bienvenida ============ -->
+<div class="sponsor-overlay" id="sponsor-overlay" hidden>
+  <div class="sponsor-modal" role="dialog" aria-modal="true" aria-labelledby="sponsor-title">
+    <button class="sponsor-close" id="sponsor-close" aria-label="Cerrar y continuar">✕</button>
+    <p class="sponsor-title" id="sponsor-title">Este proyecto es posible gracias a:</p>
+    <div class="sponsor-logos"></div>
+    <button class="btn-continue" id="sponsor-continue">Continuar</button>
+  </div>
+</div>
 
 <script src="data.js"></script>
 <script src="app.js"></script>

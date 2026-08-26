@@ -3,6 +3,13 @@
 //  bases para un manual abierto de buenas prácticas. Caso: San Carlos Centro."
 // Tesis de graduación FADU|UNL — Dona Luciano | Ramira Camila
 
+// Sponsors / instituciones que apoyan el proyecto.
+// Para sumar uno nuevo: agregar el PNG (fondo transparente) en assets/sponsors/
+// y una línea acá con { name, img, url (opcional) }.
+const SPONSORS = [
+  { name: 'Universidad Nacional del Litoral', img: 'assets/sponsors/unl.png', url: 'https://www.unl.edu.ar/' },
+];
+
 const CATEGORIES = {
   EN: { num: '01', name: 'ENTORNO', tag: '[EN]', type: 'pasiva', color: '#7ca23c' },
   T:  { num: '02', name: 'TIPOLOGÍAS', tag: '[T]', type: 'pasiva', color: '#c3b143' },
@@ -174,9 +181,7 @@ const STRATEGIES = [
 
   // ============ 06 | ARTEFACTOS EFICIENTES [AE] ============
   { code: 'AE01', cat: 'AE', group: '', title: 'AGUA',
-    text: 'Utilizar griferías con aireadores, inodoros de doble descarga, duchas de caudal limitado pudiendo disminuir un 58% el consumo de agua.' },
-  { code: 'AE02', cat: 'AE', group: '', title: 'TECNOLOGÍA INVERTER',
-    text: 'Priorizar la utilización de estos equipos para eliminar los picos de consumo eléctrico producidos durante los arranque del motor y mantener una estabilidad térmica constante. Reduciendo el consumo energético entre un 35-50%, aumentan el confort y la vida útil.',
+    text: 'Utilizar griferías con aireadores, inodoros de doble descarga, duchas de caudal limitado pudiendo disminuir un 58% el consumo de agua.',
     tabla: {
       headers: ['Cant.', 'Artefacto', 'Tiempo/Frecuencia', 'Consumo por unidad (L)', 'Día Entero (L)'],
       tradicionales: [
@@ -198,6 +203,8 @@ const STRATEGIES = [
       totalEficientes: '137',
       caption: 'Tabla 1: Consumo de artefactos, tradicionales vs eficientes.\nFuente: Barreneche R. (2017). Elaboración: Propia',
     } },
+  { code: 'AE02', cat: 'AE', group: '', title: 'TECNOLOGÍA INVERTER',
+    text: 'Priorizar la utilización de estos equipos para eliminar los picos de consumo eléctrico producidos durante los arranque del motor y mantener una estabilidad térmica constante. Reduciendo el consumo energético entre un 35-50%, aumentan el confort y la vida útil.' },
   { code: 'AE03', cat: 'AE', group: '', title: 'AEROTERMIA',
     text: 'Aprovechar la energía térmica del exterior mediante una bomba de calor para proporcionar calefacción, refrigeración y agua caliente.',
     ventajas: ['Alta compacidad.', 'Mínima superficie de envolvente.', 'Por cada 1 kW de electricidad consumida, pueden generar 4 kW de energía térmica, es decir una eficiencia del 400%', 'Menor costo constructivo.', 'Circulaciones mínimas.'],
